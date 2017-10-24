@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block page_content %}
+{% if 'logged_in' in session %}
+   <form action="{{ url_for('add_entries') }}" method=post class=add-entry>
+      <dl>
+	<dt>Title:
+	<dd><input type=text size=30 name=title>
+        <dt>Text:
+	<dd><textarea name=text rows=5 cols=40></textarea>
+	<dd><input type=submit value=Share>
+     </dl>
+   </form>
+{% endif %}
+<ul class=entries>
+{% for entry in entries %}
+  <li><h2>{{ entry.title  }}</h2>{{ entry.text|safe }}
+{% else %}
+  <li><em>Unbelievable. No entries here so far</em>
+{% endfor %}
+</ul>
+<input id="in" type="text"></input>
+<button id="test" onclick="test()">测试</button>
+<button id="jsontest">json测试</button>
+<script>
+	var p_bid = 'bid';
+	var p_cid = 'cid';
+	function test() {
+	    var value = $('#in').val();
+	    console.log(value);
+	}
+	$('#jsontest').bind('click',function(){
+	     $.ajax({
+		url: '/jsontest',
+		dataType: "json",
+		type: "post",
+		contentType: "application/json;charset=utf-8",
+		data:JSON.stringify({
+		    bid:p_bid,
+		    cid:p_cid
+		}),
+		success:function (data) {
+		    if(data.code == 1) {
+			alert(data.msg);
+		    } else {
+			alert("2222");
+		    }
+		},
+		error: function(data) {
+		    alert('error');
+		}
+		
+	     });
+	});
+</script>
+{% endblock %}
+
+
